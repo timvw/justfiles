@@ -21,7 +21,7 @@ tf *PARAMS='':
 tf-init:
       #!/usr/bin/env bash
       set -euo pipefail
-      TF_WORKSPACE=default just tf init -backend-config={{backend_config}} -reconfigure -upgrade
+      cd {{tf_dir}} && terraform init -backend-config={{backend_config}} -reconfigure -upgrade
       unset TF_WORKSPACE
       cd {{tf_dir}} && terraform workspace select {{tf_workspace}} 2>/dev/null || terraform workspace new {{tf_workspace}}
 
