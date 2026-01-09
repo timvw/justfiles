@@ -1,5 +1,7 @@
 #!/usr/bin/env just --working-directory . --justfile
 
+set dotenv-load := true
+
 import "tmux.just"
 import "browser.just"
 import "aws.just"
