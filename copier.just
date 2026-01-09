@@ -18,4 +18,17 @@ copier-tf-bootstrap:
 [group("copier")]
 [group("terraform")]
 copier-tf-stack stack:
-    uvx copier copy --trust -d project_name=$(basename "$PWD") -d stack_name={{stack}} https://github.com/timvw/copier-terraform-stack.git .
+    #!/usr/bin/env bash
+    set -euo pipefail
+    project_name=$(basename "$PWD")
+    stack_name="{{stack}}"
+    instance="{{instance}}"
+    if aws_account_id=$(aws sts get-caller-identity --query Account --output text 2>/dev/null); then
+        :
+    elif [ -n "${AWS_ACCOUNT_ID:-}" ]; then
+        aws_account_id="${AWS_ACCOUNT_ID}"
+    else
+        echo "Unable to determine AWS account ID; set AWS_PROFILE or AWS_ACCOUNT_ID." >&2
+        exit 1
+    fi
+    uvx copier copy --trust -d project_name="$project_name" -d stack_name="$stack_name" -d instance="$instance" -d aws_account_id="$aws_account_id" https://github.com/timvw/copier-terraform-stack.git .
