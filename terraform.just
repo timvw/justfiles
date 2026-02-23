@@ -3,7 +3,7 @@ stack := env_var_or_default("STACK", "core")
 tf_dir := env_var_or_default("TF_DIR", invocation_directory() + "/terraform/stacks/" + stack)
 tf_workspace := env_var_or_default("TF_WORKSPACE", "default")
 
-backend_config := "instances"/instance/"config.s3.tfbackend"
+backend_config := "instances"/instance/"config.tfbackend"
 var_file := "instances"/instance/"config.instance.tfvars"
 terraform_out_dir := ".terraform"
 plan_file := terraform_out_dir / "plan.tfplan"
