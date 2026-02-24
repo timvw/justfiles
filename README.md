@@ -18,8 +18,8 @@ JUST_JUSTFILE=$HOME/src/justfiles/Justfile
 just --working-directory .
 
 # Or define an alias and invoke the alias
-alias jg='just --justfile $HOME/src/justfiles/Justfile --working-directory .'
-jg
+alias tj='just --justfile $HOME/src/justfiles/Justfile --working-directory .'
+tj
 
 # Or invoke it as a script
 $HOME/src/justfiles/Justfile
