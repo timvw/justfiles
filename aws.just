@@ -1,7 +1,8 @@
-#Run the aws command
+# Run the aws command
+[positional-arguments]
 [group("aws")]
-aws *PARAMS="":
-    aws {{PARAMS}}
+aws *PARAMS='':
+    aws "$@"
 
 # Login to AWS
 [group("aws")]

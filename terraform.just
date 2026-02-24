@@ -1,4 +1,3 @@
-instance := env_var_or_default("INSTANCE", "dev")
 stack := env_var_or_default("STACK", "core")
 tf_dir := env_var_or_default("TF_DIR", invocation_directory() + "/terraform/stacks/" + stack)
 tf_workspace := env_var_or_default("TF_WORKSPACE", "default")
@@ -13,9 +12,10 @@ plan_summary_file := terraform_out_dir / "plan_summary.txt"
 plan_report_file := terraform_out_dir / "plan_report.txt"
 
 # Run a terraform command
+[positional-arguments]
 [group("terraform")]
 tf *PARAMS='':
-    cd {{tf_dir}} && terraform {{PARAMS}}
+    cd {{tf_dir}} && terraform "$@"
 
 # Initialize the terraform stack
 [group("terraform")]
@@ -36,14 +36,16 @@ tf-plan: tf-init
     cd {{tf_dir}} && cat "{{plan_summary_file}}"
 
 # Apply the planned infrastructure changes
+[positional-arguments]
 [group("terraform")]
 tf-apply *PARAMS="": tf-init
-    cd {{tf_dir}} && terraform apply {{plan_file}} {{PARAMS}}
+    cd {{tf_dir}} && terraform apply {{plan_file}} "$@"
 
 # Quickly (-auto-approve) apply the infrastructure changes without planning
+[positional-arguments]
 [group("terraform")]
 tf-quick *PARAMS="": tf-init
-    cd {{tf_dir}} && terraform apply --var-file="{{var_file}}" --auto-approve {{PARAMS}}
+    cd {{tf_dir}} && terraform apply --var-file="{{var_file}}" --auto-approve "$@"
 
 # Format the terraform code
 [group("terraform")]
@@ -56,7 +58,7 @@ tf-lint:
     cd {{tf_dir}} && tflint --var-file="{{var_file}}" --recursive
 
 # Import an existing resource into terraform state
-[group('terraform')]
+[group("terraform")]
 tf-import RESOURCE_ADDRESS RESOURCE_ID: tf-init
     cd {{tf_dir}} && terraform import -var-file="{{var_file}}" {{RESOURCE_ADDRESS}} {{RESOURCE_ID}}
 
@@ -67,6 +69,7 @@ tf-unlock LOCK_ID: tf-init
     cd {{tf_dir}} && terraform force-unlock -force {{LOCK_ID}}
 
 # Destroy the terraform stack
+[positional-arguments]
 [group("terraform")]
 tf-destroy *PARAMS="":
-    cd {{tf_dir}} && terraform destroy --var-file="{{var_file}}" {{PARAMS}}
+    cd {{tf_dir}} && terraform destroy --var-file="{{var_file}}" "$@"
